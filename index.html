@@ -1,56 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
 body{
-font-family:Arial;
-margin:0;
-background:#f4f6f8;
+  font-family:Arial;
+  margin:0;
+  background:#f4f6f8;
 }
 
 header{
-background:linear-gradient(135deg,#0a2540,#163d6b);
-color:white;
-padding:30px 20px;
-text-align:center;
+  background:linear-gradient(135deg,#0a66c2,#004182);
+  color:white;
+  padding:30px 20px;
+  text-align:center;
 }
 
 .hero{
-padding:60px 20px;
-text-align:center;
-background:white;
+  padding:60px 20px;
+  text-align:center;
+  background:white;
 }
 
 input{
-padding:12px;
-margin:8px;
-width:220px;
-border:1px solid #ddd;
-border-radius:8px;
+  padding:12px;
+  width:80%;
+  max-width:300px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  margin:10px;
 }
 
 button{
-padding:12px 25px;
-background:#ff5a5f;
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-}
-
-.cards{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-padding:20px;
-gap:20px;
+  padding:12px 20px;
+  border:none;
+  background:#0a66c2;
+  color:white;
+  border-radius:8px;
+  font-size:16px;
 }
 
 .card{
-background:white;
-padding:20px;
-width:260px;
-border-radius:15px;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
-transition:0.3s;
+  background:white;
+  margin:20px;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
+</style>
+</head>
 
-.card:hover{
-transform:translateY(-5px);
-}
+<body>
+
+<header>
+  <h1>StayIn24</h1>
+  <p>Worldwide Hotel & Accommodation Booking</p>
+</header>
+
+<section class="hero">
+  <h2>Find your perfect stay</h2>
+  <input type="text" placeholder="Where are you going?">
+  <br>
+  <button>Search</button>
+</section>
+
+<div class="card">
+  <h3>Luxury Hotel</h3>
+  <p>$120 per night</p>
+</div>
+
+<div class="card">
+  <h3>Beach Resort</h3>
+  <p>$200 per night</p>
+</div>
+
+</body>
+</html>
