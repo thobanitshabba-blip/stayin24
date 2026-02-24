@@ -5,11 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{font-family:Arial;margin:0;background:#f4f6f8;}
+body{
+font-family:Arial;
+margin:0;
+background:#f4f6f8;
+}
 
-header{background:#0a2540;color:white;padding:20px;text-align:center;}
+header{
+background:#0a2540;
+color:white;
+padding:20px;
+text-align:center;
+}
 
-.cards{display:flex;flex-wrap:wrap;justify-content:center;padding:20px;}
+.hero{
+padding:20px;
+text-align:center;
+background:white;
+position:sticky;
+top:0;
+}
+
+input,button{
+padding:12px;
+margin:5px;
+font-size:16px;
+}
+
+button{
+background:#ff5a5f;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+padding:20px;
+}
 
 .card{
 background:white;
@@ -18,24 +53,23 @@ padding:15px;
 width:250px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 border-radius:10px;
-cursor:pointer;
 }
 
-.card img{width:100%;border-radius:10px;}
-
-.container{padding:20px;}
-
-button{
-background:#ff5a5f;
-color:white;
-border:none;
-padding:15px;
+.card img{
 width:100%;
-font-size:18px;
-margin-top:15px;
+border-radius:10px;
 }
 
-input{padding:12px;width:100%;margin-top:10px;}
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:10px;
+box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+}
 </style>
 </head>
 
@@ -46,86 +80,65 @@ input{padding:12px;width:100%;margin-top:10px;}
 <p>Find Rooms Anytime, Anywhere</p>
 </header>
 
-<!-- HOME PAGE -->
-<div id="home">
+<section class="hero">
+<input id="searchInput" placeholder="Search city...">
+<button onclick="searchRooms()">Search</button>
+<p id="noResults" style="color:red; display:none;">No rooms found</p>
+</section>
 
-<div class="cards">
+<section class="cards" id="roomList">
 
-<div class="card" onclick="openRoom('Luxury Apartment','Durban','R850 / night','https://picsum.photos/400?1')">
+<div class="card" data-city="durban">
 <img src="https://picsum.photos/300/200?1">
 <h3>Luxury Apartment</h3>
 <p>Durban</p>
 <p>R850 / night</p>
 </div>
 
-<div class="card" onclick="openRoom('Modern Studio','Johannesburg','R600 / night','https://picsum.photos/400?2')">
+<div class="card" data-city="johannesburg">
 <img src="https://picsum.photos/300/200?2">
 <h3>Modern Studio</h3>
 <p>Johannesburg</p>
 <p>R600 / night</p>
 </div>
 
+<div class="card" data-city="cape town">
+<img src="https://picsum.photos/300/200?3">
+<h3>Beach Room</h3>
+<p>Cape Town</p>
+<p>R1200 / night</p>
 </div>
 
-</div>
+</section>
 
-<!-- ROOM DETAILS PAGE -->
-<div id="roomPage" style="display:none;">
-
-<div class="container">
-
-<button onclick="goBack()">⬅ Back</button>
-
-<img id="roomImage">
-
-<h2 id="roomTitle"></h2>
-<p id="roomCity"></p>
-<h3 id="roomPrice"></h3>
-
-<label>Check-in</label>
-<input type="date">
-
-<label>Check-out</label>
-<input type="date">
-
-<button onclick="bookRoom()">BOOK NOW</button>
-
-</div>
-
+<div class="bottom-nav">
+<span>🏠 Home</span>
+<span>🔍 Search</span>
+<span>❤️ Saved</span>
+<span>👤 Profile</span>
 </div>
 
 <script>
+function searchRooms(){
+let input = document.getElementById("searchInput").value.toLowerCase();
+let rooms = document.querySelectorAll(".card");
+let found = false;
 
-function openRoom(title, city, price, image){
+rooms.forEach(room=>{
+let city = room.getAttribute("data-city");
 
-document.getElementById("home").style.display="none";
-document.getElementById("roomPage").style.display="block";
+if(city.includes(input)){
+room.style.display="block";
+found = true;
+}else{
+room.style.display="none";
+}
+});
 
-document.getElementById("roomTitle").innerText = title;
-document.getElementById("roomCity").innerText = city;
-document.getElementById("roomPrice").innerText = price;
-document.getElementById("roomImage").src = image;
-
+document.getElementById("noResults").style.display = found ? "none" : "block";
 }
 
-function goBack(){
-document.getElementById("home").style.display="block";
-document.getElementById("roomPage").style.display="none";
-}
-
-function bookRoom(){
-
-const checkin = document.querySelectorAll("input")[0].value;
-const checkout = document.querySelectorAll("input")[1].value;
-
-if(!checkin || !checkout){
-alert("Please select dates 📅");
-return;
-}
-
-alert("Booking successful 🔥");
-
-}
+document.getElementById("searchInput").addEventListener("keyup", searchRooms);
 </script>
 
 </body>
