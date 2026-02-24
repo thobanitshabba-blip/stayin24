@@ -1,81 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Stayin24</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
-  font-family:Arial;
-  margin:0;
-  background:#f2f2f2;
+font-family:Arial;
+margin:0;
+background:#f4f6f8;
 }
 
 header{
-  background:linear-gradient(135deg,#0a66c2,#004182);
-  color:white;
-  padding:25px;
-  text-align:center;
+background:#0a2540;
+color:white;
+padding:20px;
+text-align:center;
 }
 
 .hero{
-  background:white;
-  padding:30px;
-  text-align:center;
+padding:20px;
+text-align:center;
+background:white;
+position:sticky;
+top:0;
 }
 
-input{
-  padding:12px;
-  width:80%;
-  max-width:320px;
-  border-radius:25px;
-  border:1px solid #ccc;
-  margin:10px;
+input,button{
+padding:12px;
+margin:5px;
+font-size:16px;
 }
 
 button{
-  padding:12px 25px;
-  border:none;
-  background:#0a66c2;
-  color:white;
-  border-radius:25px;
-  font-size:16px;
+background:#ff5a5f;
+color:white;
+border:none;
+cursor:pointer;
 }
 
-.container{
-  padding:15px;
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+padding:20px;
 }
 
 .card{
-  background:white;
-  border-radius:15px;
-  overflow:hidden;
-  margin-bottom:20px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+background:white;
+margin:10px;
+padding:15px;
+width:250px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+border-radius:10px;
 }
 
 .card img{
-  width:100%;
-}
-
-.card-content{
-  padding:15px;
-}
-
-.price{
-  color:#0a66c2;
-  font-weight:bold;
-  font-size:18px;
+width:100%;
+border-radius:10px;
 }
 
 .bottom-nav{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:white;
-  display:flex;
-  justify-content:space-around;
-  padding:10px;
-  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:10px;
+box-shadow:0 -2px 10px rgba(0,0,0,0.1);
 }
 </style>
 </head>
@@ -83,70 +76,70 @@ button{
 <body>
 
 <header>
-  <h1>StayIn24</h1>
-  <p>Find stays worldwide</p>
+<h1>Stayin24</h1>
+<p>Find Rooms Anytime, Anywhere</p>
 </header>
 
 <section class="hero">
-  <h2>Book your perfect stay</h2>
-  <input type="text" id="searchInput" placeholder="Search city..."><br>
-  <button onclick="searchRooms()">Search</button>
+<input id="searchInput" placeholder="Search city...">
+<button onclick="searchRooms()">Search</button>
+<p id="noResults" style="color:red; display:none;">No rooms found</p>
 </section>
 
-<div class="container">
+<section class="cards" id="roomList">
 
-  <div class="card">
-    <img src="https://picsum.photos/400/250?1">
-    <div class="card-content">
-      <h3>Luxury Apartment</h3>
-      <p>Durban</p>
-      <p class="price">R850 / night</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="https://picsum.photos/400/250?2">
-    <div class="card-content">
-      <h3>Modern Studio</h3>
-      <p>Johannesburg</p>
-      <p class="price">R600 / night</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="https://picsum.photos/400/250?3">
-    <div class="card-content">
-      <h3>Beach Room</h3>
-      <p>Cape Town</p>
-      <p class="price">R1200 / night</p>
-    </div>
-  </div>
-
+<div class="card" data-city="durban">
+<img src="https://picsum.photos/300/200?1">
+<h3>Luxury Apartment</h3>
+<p>Durban</p>
+<p>R850 / night</p>
 </div>
 
+<div class="card" data-city="johannesburg">
+<img src="https://picsum.photos/300/200?2">
+<h3>Modern Studio</h3>
+<p>Johannesburg</p>
+<p>R600 / night</p>
+</div>
+
+<div class="card" data-city="cape town">
+<img src="https://picsum.photos/300/200?3">
+<h3>Beach Room</h3>
+<p>Cape Town</p>
+<p>R1200 / night</p>
+</div>
+
+</section>
+
 <div class="bottom-nav">
-  <p>🏠 Home</p>
-  <p>🔍 Search</p>
-  <p>❤️ Saved</p>
-  <p>👤 Profile</p>
+<span>🏠 Home</span>
+<span>🔍 Search</span>
+<span>❤️ Saved</span>
+<span>👤 Profile</span>
 </div>
 
 <script>
 function searchRooms(){
-  let input = document.getElementById("searchInput").value.toLowerCase();
-  let cards = document.querySelectorAll(".card");
+let input = document.getElementById("searchInput").value.toLowerCase();
+let rooms = document.querySelectorAll(".card");
+let found = false;
 
-  cards.forEach(card => {
-    let text = card.innerText.toLowerCase();
+rooms.forEach(room=>{
+let city = room.getAttribute("data-city");
 
-    if(text.includes(input)){
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  });
+if(city.includes(input)){
+room.style.display="block";
+found = true;
+}else{
+room.style.display="none";
 }
+});
+
+document.getElementById("noResults").style.display = found ? "none" : "block";
+}
+
+document.getElementById("searchInput").addEventListener("keyup", searchRooms);
 </script>
 
 </body>
-    </html>
+                   </html>
