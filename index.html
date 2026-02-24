@@ -1,215 +1,118 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Stayin24</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{font-family:Arial;margin:0;background:#f4f6f8;}
-header{background:#0a2540;color:white;padding:20px;text-align:center;}
-.hero{padding:20px;text-align:center;background:white;}
-
-input,button{
-padding:12px;
-margin:5px;
-font-size:16px;
-}
-
-button{
-background:#ff5a5f;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-.cards{display:flex;flex-wrap:wrap;justify-content:center;padding:20px;}
-
-.card{
-background:white;
-margin:10px;
-padding:15px;
-width:250px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-border-radius:10px;
-cursor:pointer;
-}
-
-.card img{width:100%;border-radius:10px;}
-
-.container{padding:20px;}
-</style>
-</head>
-
-<body>
-
-<header>
-<h1>Stayin24</h1>
-</header>
-
-<!-- LOGIN -->
-<div id="loginPage" style="display:none; padding:20px;">
-<h2>Login</h2>
-<input id="email" placeholder="Enter email">
-<button onclick="login()">LOGIN</button>
-</div>
-
-<!-- HOME -->
-<div id="home">
-
-<section class="hero">
-<input id="searchInput" placeholder="Search city...">
-<button onclick="searchRooms()">Search</button>
-<p id="noResults" style="color:red;display:none;">No rooms found</p>
-</section>
-
-<section class="cards" id="roomList">
-
-<div class="card" data-city="durban"
-onclick="openRoom('Luxury Apartment','Durban','R850 / night','https://picsum.photos/400?1')">
-<img src="https://picsum.photos/300/200?1">
-<h3>Luxury Apartment</h3>
-<p>Durban</p>
-<p>R850 / night</p>
-</div>
-
-<div class="card" data-city="johannesburg"
-onclick="openRoom('Modern Studio','Johannesburg','R600 / night','https://picsum.photos/400?2')">
-<img src="https://picsum.photos/300/200?2">
-<h3>Modern Studio</h3>
-<p>Johannesburg</p>
-<p>R600 / night</p>
-</div>
-
-</section>
-
-</div>
-
-<!-- ROOM PAGE -->
-<div id="roomPage" style="display:none;">
-<div class="container">
-
-<button onclick="goBack()">⬅ Back</button>
-
-<img id="roomImage">
-
-<h2 id="roomTitle"></h2>
-<p id="roomCity"></p>
-<h3 id="roomPrice"></h3>
-
-<label>Check-in</label>
-<input type="date" id="checkin">
-
-<label>Check-out</label>
-<input type="date" id="checkout">
-
-<button onclick="bookRoom()">BOOK NOW</button>
-
-</div>
-</div>
-
 <script>
+document.addEventListener("DOMContentLoaded", () => {
 
-let currentRoom = {};
+  /* ---------------- ROOMS DATA ---------------- */
+  const rooms = [
+    {
+      id: 1,
+      name: "Deluxe Room",
+      price: 1200,
+      image: "images/room1.jpg",
+      bookedDates: ["2026-03-10", "2026-03-11"]
+    },
+    {
+      id: 2,
+      name: "Executive Suite",
+      price: 2500,
+      image: "images/room2.jpg",
+      bookedDates: []
+    }
+  ];
 
-// SEARCH
-function searchRooms(){
-let input = searchInput.value.toLowerCase();
-let rooms = document.querySelectorAll(".card");
-let found = false;
+  const container = document.querySelector(".rooms-container");
 
-rooms.forEach(room=>{
-let city = room.dataset.city;
+  /* ---------------- LOGIN SYSTEM ---------------- */
+  function isLoggedIn() {
+    return localStorage.getItem("user");
+  }
 
-if(city.includes(input)){
-room.style.display="block";
-found=true;
-}else{
-room.style.display="none";
-}
+  function login() {
+    const name = prompt("Enter your name to login");
+    if (name) {
+      localStorage.setItem("user", name);
+      alert("Welcome " + name);
+    }
+  }
+
+  /* ---------------- DISPLAY ROOMS ---------------- */
+  function displayRooms(roomList) {
+    container.innerHTML = "";
+
+    roomList.forEach(room => {
+      container.innerHTML += `
+        <div class="room-card" onclick="openRoom(${room.id})">
+          <img src="${room.image}" width="100%">
+          <h3>${room.name}</h3>
+          <p>R${room.price} / night</p>
+        </div>
+      `;
+    });
+  }
+
+  displayRooms(rooms);
+
+  /* ---------------- SEARCH (YOUR CURRENT ONE STILL WORKS) ---------------- */
+  window.searchRooms = function () {
+    const value = document.querySelector("#search").value.toLowerCase();
+
+    const filtered = rooms.filter(room =>
+      room.name.toLowerCase().includes(value)
+    );
+
+    displayRooms(filtered);
+  };
+
+  /* ---------------- OPEN ROOM DETAILS ---------------- */
+  window.openRoom = function (id) {
+    const room = rooms.find(r => r.id === id);
+
+    container.innerHTML = `
+      <div class="room-details">
+        <img src="${room.image}" width="300">
+
+        <h2>${room.name}</h2>
+        <p>Price: R${room.price} per night</p>
+
+        <label>Select date:</label>
+        <input type="date" id="datePicker">
+
+        <br><br>
+
+        <button onclick="bookRoom(${room.id})">Book Now</button>
+        <button onclick="goBack()">⬅ Back</button>
+      </div>
+    `;
+  };
+
+  /* ---------------- BOOKING SYSTEM ---------------- */
+  window.bookRoom = function (id) {
+
+    if (!isLoggedIn()) {
+      login();
+      return;
+    }
+
+    const selectedDate = document.getElementById("datePicker").value;
+
+    if (!selectedDate) {
+      alert("Please select a date");
+      return;
+    }
+
+    const room = rooms.find(r => r.id === id);
+
+    if (room.bookedDates.includes(selectedDate)) {
+      alert("❌ Room not available on this date");
+    } else {
+      room.bookedDates.push(selectedDate);
+      alert("✅ Booking confirmed for " + selectedDate);
+    }
+  };
+
+  /* ---------------- BACK BUTTON ---------------- */
+  window.goBack = function () {
+    displayRooms(rooms);
+  };
+
 });
-
-noResults.style.display = found ? "none":"block";
-}
-
-searchInput.addEventListener("keyup", searchRooms);
-
-// OPEN ROOM
-function openRoom(title, city, price, image){
-
-currentRoom = {title, city, price, image};
-
-home.style.display="none";
-roomPage.style.display="block";
-
-roomTitle.innerText = title;
-roomCity.innerText = city;
-roomPrice.innerText = price;
-roomImage.src = image;
-}
-
-// BACK
-function goBack(){
-home.style.display="block";
-roomPage.style.display="none";
-}
-
-// LOGIN
-function login(){
-const email = document.getElementById("email").value;
-
-if(!email){
-alert("Enter email");
-return;
-}
-
-localStorage.setItem("user", email);
-
-loginPage.style.display="none";
-home.style.display="block";
-}
-
-// BOOK
-function bookRoom(){
-
-const user = localStorage.getItem("user");
-
-if(!user){
-roomPage.style.display="none";
-loginPage.style.display="block";
-return;
-}
-
-const checkin = checkin.value;
-const checkout = checkout.value;
-
-if(!checkin || !checkout){
-alert("Select dates first 📅");
-return;
-}
-
-let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-
-const clash = bookings.find(b =>
-b.title === currentRoom.title &&
-(
-(checkin >= b.checkin && checkin <= b.checkout) ||
-(checkout >= b.checkin && checkout <= b.checkout)
-)
-);
-
-if(clash){
-alert("Not available for those dates ❌");
-return;
-}
-
-bookings.push({...currentRoom,checkin,checkout,user});
-localStorage.setItem("bookings", JSON.stringify(bookings));
-
-alert("Booking confirmed 🎉");
-
-}
-
 </script>
-
-</body>
-                 </html>
