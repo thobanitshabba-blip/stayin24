@@ -66,6 +66,17 @@ button{
   font-weight:bold;
   font-size:18px;
 }
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+}
 </style>
 </head>
 
@@ -78,8 +89,8 @@ button{
 
 <section class="hero">
   <h2>Book your perfect stay</h2>
-  <input type="text" placeholder="Search city..."><br>
-  <button>Search</button>
+  <input type="text" id="searchInput" placeholder="Search city..."><br>
+  <button onclick="searchRooms()">Search</button>
 </section>
 
 <div class="container">
@@ -90,7 +101,6 @@ button{
       <h3>Luxury Apartment</h3>
       <p>Durban</p>
       <p class="price">R850 / night</p>
-      <button>Book now</button>
     </div>
   </div>
 
@@ -100,7 +110,6 @@ button{
       <h3>Modern Studio</h3>
       <p>Johannesburg</p>
       <p class="price">R600 / night</p>
-      <button>Book now</button>
     </div>
   </div>
 
@@ -110,11 +119,34 @@ button{
       <h3>Beach Room</h3>
       <p>Cape Town</p>
       <p class="price">R1200 / night</p>
-      <button>Book now</button>
     </div>
   </div>
 
 </div>
 
+<div class="bottom-nav">
+  <p>🏠 Home</p>
+  <p>🔍 Search</p>
+  <p>❤️ Saved</p>
+  <p>👤 Profile</p>
+</div>
+
+<script>
+function searchRooms(){
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    let text = card.innerText.toLowerCase();
+
+    if(text.includes(input)){
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+</script>
+
 </body>
-  </html>
+</html>
